@@ -1,11 +1,18 @@
 import { Link, NavLink } from "react-router-dom";
 import { assets } from "../assets/assets";
 import { useState } from "react";
+import { useContext } from "react";
+import { AppContext } from "../context/AppContext";
 
 const Navbar = () => {
-  const [showMenu, setShowMenu] = useState(false);
-  const [token, setToken] = useState(true);
+  const { token, setToken, userData } = useContext(AppContext);
 
+  const [showMenu, setShowMenu] = useState(false);
+
+  const logout = () => {
+    setToken(false);
+    localStorage.removeItem("token");
+  };
   return (
     <div className="flex items-center justify-between text-sm py-4 mb-5 border-b border-b-gray-400">
       <Link to="/">
@@ -30,11 +37,11 @@ const Navbar = () => {
         </NavLink>
       </ul>
       <div className="flex items-center gap-4">
-        {token ? (
+        {token && userData ? (
           <div className="flex gap-2 cursor-pointer items-center group relative">
             <img
               className="w-8 rounded-full"
-              src={assets.profile_pic}
+              src={userData.image}
               alt="profile pic"
             />
             <img className="w-2.5" src={assets.dropdown_icon} alt="dropdown" />
@@ -53,7 +60,7 @@ const Navbar = () => {
                   My Appointment
                 </Link>
                 <p
-                  onClick={() => setToken(false)}
+                  onClick={logout}
                   className="hover:text-black cursor-pointer "
                 >
                   Logout
@@ -86,7 +93,7 @@ const Navbar = () => {
               className="w-7"
               onClick={() => setShowMenu(false)}
               src={assets.cross_icon}
-              alt=""
+              alt="cross icon"
             />
           </div>
           <ul className="flex flex-col items-center gap-2 mt-5 text-lg font-medium">
